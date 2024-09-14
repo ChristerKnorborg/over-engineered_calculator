@@ -25,7 +25,7 @@ func TestAddHandler(t *testing.T) {
 
 	// Check the result directly from the response body
 	expected := `{"result":15}`
-	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove '\n' from response body
+	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove whitespace from JSON
 	if actual != expected {
 		t.Fatalf("expected %v, got %v", expected, actual)
 	}
@@ -47,7 +47,7 @@ func TestSubtractHandler(t *testing.T) {
 
 	// Check the result directly from the response body
 	expected := `{"result":5}`
-	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove '\n' from response body
+	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove whitespace from JSON
 	if actual != expected {
 		t.Fatalf("expected %v, got %v", expected, actual)
 	}
@@ -69,7 +69,7 @@ func TestMultiplyHandler(t *testing.T) {
 
 	// Check the result directly from the response body
 	expected := `{"result":50}`
-	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove '\n' from response body
+	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove whitespace from JSON
 	if actual != expected {
 		t.Fatalf("expected %v, got %v", expected, actual)
 	}
@@ -91,7 +91,7 @@ func TestDivideHandler(t *testing.T) {
 
 	// Check the result directly from the response body
 	expected := `{"result":2}`
-	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove '\n' from response body
+	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove whitespace from JSON
 	if actual != expected {
 		t.Fatalf("expected %v, got %v", expected, actual)
 	}
@@ -113,7 +113,7 @@ func TestModuloHandler(t *testing.T) {
 
 	// Check the result directly from the response body
 	expected := `{"result":1}`
-	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove '\n' from response body
+	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove whitespace from JSON
 	if actual != expected {
 		t.Fatalf("expected %v, got %v", expected, actual)
 	}
@@ -135,7 +135,7 @@ func TestPowerHandler(t *testing.T) {
 
 	// Check the result directly from the response body
 	expected := `{"result":8}`
-	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove '\n' from response body
+	actual := strings.TrimSpace(responseRecorder.Body.String()) // remove whitespace from JSON
 	if actual != expected {
 		t.Fatalf("expected %v, got %v", expected, actual)
 	}

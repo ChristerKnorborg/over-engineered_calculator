@@ -8,6 +8,9 @@ import (
 	"strconv"
 )
 
+type calculatorOperation func(a, b float64) float64
+type calculatorOperationWithError func(a, b float64) (float64, error)
+
 var calc = calculator.Calculator{}
 
 // Helper function to parse operands from the request as float64
@@ -21,82 +24,74 @@ func parseOperands(request *http.Request) (float64, float64, error) {
 	return operand1, operand2, nil
 }
 
-// Handler for Add operation
-func AddHandler(writer http.ResponseWriter, request *http.Request) {
+// Helper function to write JSON response for a result map
+func writeResultJSON(writer http.ResponseWriter, result float64) {
+	writer.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(writer).Encode(map[string]float64{"result": result})
+}
+
+// Generic handler for operations that return no error (Add, Subtract, Multiply, Power)
+func operationHandler(writer http.ResponseWriter, request *http.Request, operation calculatorOperation) {
 	operand1, operand2, err := parseOperands(request)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
 	}
-	result := calc.Add(operand1, operand2)
-	json.NewEncoder(writer).Encode(map[string]float64{"result": result})
+
+	result := operation(operand1, operand2)
+	writeResultJSON(writer, result)
+}
+
+// Generic handler for operations that return an error (divide, modulo)
+func operationHandlerWithError(writer http.ResponseWriter, request *http.Request, operation calculatorOperationWithError) {
+	operand1, operand2, err := parseOperands(request)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	result, err := operation(operand1, operand2)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	writeResultJSON(writer, result)
+}
+
+// Handler for Add operation
+func AddHandler(writer http.ResponseWriter, request *http.Request) {
+	operationHandler(writer, request, calc.Add)
 }
 
 // Handler for Subtract operation
 func SubtractHandler(writer http.ResponseWriter, request *http.Request) {
-	operand1, operand2, err := parseOperands(request)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
-		return
-	}
-	result := calc.Subtract(operand1, operand2)
-	json.NewEncoder(writer).Encode(map[string]float64{"result": result})
+	operationHandler(writer, request, calc.Subtract)
 }
 
 // Handler for Multiply operation
 func MultiplyHandler(writer http.ResponseWriter, request *http.Request) {
-	operand1, operand2, err := parseOperands(request)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
-		return
-	}
-	result := calc.Multiply(operand1, operand2)
-	json.NewEncoder(writer).Encode(map[string]float64{"result": result})
+	operationHandler(writer, request, calc.Multiply)
 }
 
 // Handler for Divide operation
 func DivideHandler(writer http.ResponseWriter, request *http.Request) {
-	operand1, operand2, err := parseOperands(request)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
-		return
-	}
-	result, err := calc.Divide(operand1, operand2)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
-		return
-	}
-	json.NewEncoder(writer).Encode(map[string]float64{"result": result})
+	operationHandlerWithError(writer, request, calc.Divide)
 }
 
 // Handler for Modulo operation
 func ModuloHandler(writer http.ResponseWriter, request *http.Request) {
-	operand1, operand2, err := parseOperands(request)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
-		return
-	}
-	result, err := calc.Modulo(operand1, operand2)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
-		return
-	}
-	json.NewEncoder(writer).Encode(map[string]float64{"result": result})
+	operationHandlerWithError(writer, request, calc.Modulo)
 }
 
 // Handler for Power operation
 func PowerHandler(writer http.ResponseWriter, request *http.Request) {
-	operand1, operand2, err := parseOperands(request)
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
-		return
-	}
-	result := calc.Power(operand1, operand2)
-	json.NewEncoder(writer).Encode(map[string]float64{"result": result})
+	operationHandler(writer, request, calc.Power)
 }
 
 // Handler for retrieving history
 func HistoryHandler(writer http.ResponseWriter, request *http.Request) {
 	history := calc.GetHistory()
+	writer.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(writer).Encode(history)
 }
