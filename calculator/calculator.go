@@ -1,13 +1,17 @@
 package calculator
 
 import (
+	"context"
 	"errors"
+	"log"
 	"math"
 	"time"
+
+	"cloud.google.com/go/firestore"
 )
 
 type Calculator struct {
-	History []HistoryEntry // History of operations performed
+	Storage Storage
 }
 
 type HistoryEntry struct {
@@ -16,6 +20,20 @@ type HistoryEntry struct {
 	Operation string    // +, -, *, /, %, ^
 	Result    float64   // Result after applying the operation
 	Timestamp time.Time // When the operation was performed
+}
+
+type Storage interface {
+	Save(entry HistoryEntry) error
+	GetHistory() ([]HistoryEntry, error)
+}
+
+type LocalStorage struct {
+	History []HistoryEntry
+}
+
+type FirestoreStorage struct {
+	Client  *firestore.Client
+	Context context.Context
 }
 
 func (calc *Calculator) Add(Operand1 float64, Operand2 float64) float64 {
@@ -62,7 +80,7 @@ func (calc *Calculator) Power(Operand1 float64, Operand2 float64) float64 {
 	return result
 }
 
-func (c *Calculator) saveToHistory(operation string, operand1, operand2, result float64) {
+func (calc *Calculator) saveToHistory(operation string, operand1, operand2, result float64) {
 	entry := HistoryEntry{
 		Operation: operation,
 		Operand1:  operand1,
@@ -70,9 +88,60 @@ func (c *Calculator) saveToHistory(operation string, operand1, operand2, result 
 		Result:    result,
 		Timestamp: time.Now(),
 	}
-	c.History = append(c.History, entry)
+
+	err := calc.Storage.Save(entry)
+	if err != nil {
+		log.Printf("Failed to save history: %v", err)
+	}
 }
 
-func (c *Calculator) GetHistory() []HistoryEntry {
-	return c.History
+func (calc *Calculator) GetHistory() ([]HistoryEntry, error) {
+	return calc.Storage.GetHistory()
+}
+
+func (storage *LocalStorage) Save(entry HistoryEntry) error {
+	storage.History = append(storage.History, entry)
+	return nil
+}
+
+func (storage *LocalStorage) GetHistory() ([]HistoryEntry, error) {
+	if len(storage.History) == 0 {
+		return nil, errors.New("no history found")
+	}
+	return storage.History, nil
+}
+
+func (storage *FirestoreStorage) Save(entry HistoryEntry) error {
+	_, _, err := storage.Client.Collection("calculations").Add(storage.Context, map[string]interface{}{
+		"operand1":  entry.Operand1,
+		"operand2":  entry.Operand2,
+		"operation": entry.Operation,
+		"result":    entry.Result,
+		"timestamp": entry.Timestamp,
+	})
+	return err
+}
+
+func (storage *FirestoreStorage) GetHistory() ([]HistoryEntry, error) {
+
+	var history []HistoryEntry
+
+	// Probably add pagination given a real application
+	iter := storage.Client.Collection("calculations").Documents(storage.Context)
+
+	for {
+		doc, err := iter.Next()
+		if err != nil {
+			break
+		}
+
+		var entry HistoryEntry
+		err = doc.DataTo(&entry)
+		if err != nil {
+			return nil, err
+		}
+		history = append(history, entry)
+	}
+
+	return history, nil
 }

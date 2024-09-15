@@ -8,10 +8,16 @@ import (
 	"strconv"
 )
 
+var calc = calculator.Calculator{}
+
+// Function to set the calculator instance to keep compatability with
+// Local Function calls and Storage for unit tests
+func SetCalculator(calculator calculator.Calculator) {
+	calc = calculator
+}
+
 type calculatorOperation func(a, b float64) float64
 type calculatorOperationWithError func(a, b float64) (float64, error)
-
-var calc = calculator.Calculator{}
 
 // Helper function to parse operands from the request as float64
 func parseOperands(request *http.Request) (float64, float64, error) {
@@ -91,7 +97,11 @@ func PowerHandler(writer http.ResponseWriter, request *http.Request) {
 
 // Handler for retrieving history
 func HistoryHandler(writer http.ResponseWriter, request *http.Request) {
-	history := calc.GetHistory()
+	history, err := calc.Storage.GetHistory()
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	writer.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(writer).Encode(history)
 }
