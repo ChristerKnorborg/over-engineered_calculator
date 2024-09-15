@@ -70,7 +70,7 @@ func main() {
 	ctx := context.Background()
 
 	// Initialize Firestore
-	if err := initFirestoreEmulator(); err != nil {
+	if err := initFirestoreProduction(); err != nil {
 		log.Fatalf("Firestore initialization failed: %v", err)
 	}
 	defer firestoreClient.Close()
@@ -91,7 +91,6 @@ func main() {
 
 	// Start HTTP server on port 8080 for manual testing
 	fmt.Println("Starting server on :8080...")
-	fmt.Println("Firestore emulator:", os.Getenv("FIRESTORE_EMULATOR_HOST"))
 	err := http.ListenAndServe(":8080", mux)
 	if err != nil {
 		log.Fatal(err)
