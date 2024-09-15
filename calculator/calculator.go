@@ -126,8 +126,8 @@ func (storage *FirestoreStorage) GetHistory() ([]HistoryEntry, error) {
 
 	var history []HistoryEntry
 
-	// Probably add pagination given a real application
-	iter := storage.Client.Collection("calculations").Documents(storage.Context)
+	// Query the Firestore database by "timestamp". Probably add pagination given a real application
+	iter := storage.Client.Collection("calculations").OrderBy("timestamp", firestore.Desc).Documents(storage.Context)
 
 	for {
 		doc, err := iter.Next()

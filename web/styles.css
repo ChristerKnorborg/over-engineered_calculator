@@ -13,7 +13,7 @@ body {
     grid-gap: 10px;
     padding: 20px;
     background-color: #e0e0e0;
-     border-radius: 10px;
+    border-radius: 10px;
 }
 
 .calculator button {
@@ -54,4 +54,40 @@ body {
     line-height: 1em;             
     overflow: hidden;               
 }
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    gap: 40vh; 
+}
+
+
+#historyButton {
+    padding: 10px 20px;
+    font-size: 2rem;
+    background-color: orange;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    width: 55vh;
+}
+
+#historyList {
+    height: 300px;
+    overflow-y: scroll;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+#historyList li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.hidden {
+    display: none;
+}
+
 

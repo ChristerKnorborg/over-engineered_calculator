@@ -6,10 +6,40 @@ let operator = null;
 
 const display = document.getElementById('display');
 
-// Initialize event listeners for calculator buttons
+// Initialize event listeners for buttons
+document.getElementById('historyButton').addEventListener('click', toggleHistoryVisibility);
+
 document.querySelectorAll('.calculator button').forEach(button => {
     button.addEventListener('click', () => handleButtonClick(button.textContent));
 });
+
+
+
+
+
+
+const operatorEndpointMap = {
+    '+': 'add',
+    '-': 'subtract',
+    '×': 'multiply',
+    '÷': 'divide',
+    '%': 'modulo',
+    '^': 'power',
+};
+
+
+const endpointOperatorMap = {
+    'Add': '+',
+    'Subtract': '-',
+    'Multiply': '*',
+    'Divide': '÷',
+    'Modulo': '%',
+    'Power': '^'
+};
+
+
+
+
 
 
 
@@ -104,15 +134,7 @@ function performCalculation() {
 
 // Mapping for selected operator to corresponding API endpoint
 function mapOperatorToEndpoint(operator) {
-    const operatorMap = {
-        '+': 'add',
-        '-': 'subtract',
-        '×': 'multiply',
-        '÷': 'divide',
-        '%': 'modulo',
-        '^': 'power',
-    };
-    return operatorMap[operator];
+    return operatorEndpointMap[operator];
 }
 
 
@@ -130,4 +152,91 @@ function fetchApiAndUpdate(apiUrl) {
         .catch(() => {
             display.textContent = "Error occurred";
         });
+}
+
+
+
+
+
+
+
+// Method to toggle the visibility of the history list and fetch history
+function toggleHistoryVisibility() {
+    const historyList = document.getElementById('historyList');
+    
+    var historyHidden = historyList.classList.contains('hidden');
+    if (historyHidden) {
+        fetchAndDisplayHistory();
+    } else {
+        historyList.classList.add('hidden');
+    }
+}
+
+
+
+
+
+
+
+// Method to fetch history from the API and update the history list
+function fetchAndDisplayHistory() {
+    const apiUrl = 'http://localhost:8080/history';
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(historyData => updateHistoryList(historyData))
+        .catch(() => console.error('Error fetching history'));
+}
+
+
+
+
+// Method to update history list with fetched data
+function updateHistoryList(historyData) {
+
+    // Delete existing items
+    const historyList = document.getElementById('historyList');
+    historyList.innerHTML = ''; 
+
+    historyData.forEach(entry => {
+        const listItem = createHistoryListItem(entry);
+        historyList.appendChild(listItem);
+    });
+
+    historyList.classList.remove('hidden');
+}
+
+
+
+
+
+
+// Mapping for API endpoint to selected operator
+function mapEndpointToOperator(endpointName) {
+    return endpointOperatorMap[endpointName];
+}
+
+
+
+// Create a single list item for the history list.
+// Elements are sorted by timestamp in descending order on the backend.
+function createHistoryListItem(entry) {
+    const listItem = document.createElement('li');
+
+    // Format the timestamp as DD/MM/YY HH:MM
+    const timestamp = new Date(entry.Timestamp);
+    const day = timestamp.getDate();
+    const month = timestamp.getMonth() + 1; // Months are 0-based in JS...
+    const year = timestamp.getFullYear().toString().slice(-2); // Last two digits of the year
+    const hours = timestamp.getHours();
+    const minutes = timestamp.getMinutes().toString().padStart(2, '0'); // Make minutes always two digits
+
+    const formattedDate = `${day}/${month}/${year} ${hours}.${minutes}`;
+
+    const operatorSymbol = mapEndpointToOperator(entry.Operation);
+
+
+    listItem.textContent = `${formattedDate}: ${entry.Operand1} ${operatorSymbol} ${entry.Operand2} = ${entry.Result}`;
+
+    return listItem;
 }
