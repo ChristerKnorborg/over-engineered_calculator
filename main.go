@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"overengineered_calculator/api"
@@ -15,7 +14,7 @@ func main() {
 	ctx := context.Background()
 
 	// Initialize Firestore
-	if err := setup.InitFirestoreEmulator(); err != nil {
+	if err := setup.InitFirestoreProduction(); err != nil {
 		log.Fatalf("Firestore initialization failed: %v", err)
 	}
 	defer setup.FirestoreClient.Close()
@@ -36,7 +35,7 @@ func main() {
 	handlerWithCors := enableCORS(mux)
 
 	// Start HTTP server on port 8080 for manual testing
-	fmt.Println("Starting server on :8080...")
+	//fmt.Println("Starting server on :8080...")
 	err := http.ListenAndServe(":8080", handlerWithCors)
 	if err != nil {
 		log.Fatal(err)

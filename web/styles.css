@@ -77,6 +77,8 @@ body {
 #historyList {
     height: 300px;
     overflow-y: scroll;
+    list-style-type: none;
+    padding: 0;
     background-color: #f9f9f9;
     border-radius: 5px;
 }
