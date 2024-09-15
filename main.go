@@ -48,22 +48,6 @@ func initFirestore() error {
 	return nil
 }
 
-func enableCors(handler http.Handler) http.Handler {
-	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		writer.Header().Set("Access-Control-Allow-Origin", "*")
-		writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
-		// Handle preflight request
-		if request.Method == "OPTIONS" {
-			writer.WriteHeader(http.StatusOK)
-			return
-		}
-
-		handler.ServeHTTP(writer, request)
-	})
-}
-
 func main() {
 
 	ctx := context.Background()
@@ -87,14 +71,12 @@ func main() {
 	// Create HTTP request multiplexer
 	mux := http.NewServeMux()
 	api.RegisterRoutes(mux)
-	handlerWithCors := enableCors(mux)
 
 	// Start HTTP server on port 8080 for manual testing
 	fmt.Println("Starting server on :8080...")
 	fmt.Println("Firestore emulator:", os.Getenv("FIRESTORE_EMULATOR_HOST"))
-	err := http.ListenAndServe(":8080", handlerWithCors)
+	err := http.ListenAndServe(":8080", mux)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
