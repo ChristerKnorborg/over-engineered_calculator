@@ -9,31 +9,48 @@ import (
 	"overengineered_calculator/api"
 	"overengineered_calculator/calculator"
 
-	"cloud.google.com/go/firestore"      // Import the Firestore client
-	firebase "firebase.google.com/go/v4" // Import the Firestore package
+	"cloud.google.com/go/firestore"
+	firebase "firebase.google.com/go/v4"
 	"google.golang.org/api/option"
 )
 
 var firestoreClient *firestore.Client
 
-func initFirestore() error {
+// Initialize Firestore connection using service account key
+func initFirestoreProduction() error {
+
+	ctx := context.Background()
+
+	// Connect to the real Firestore service
+	fmt.Println("Connecting to Firestore service...")
+	opt := option.WithCredentialsFile("secrets/serviceAccountKey.json")
+	app, err := firebase.NewApp(ctx, nil, opt)
+
+	if err != nil {
+		return fmt.Errorf("error initializing app: %v", err)
+	}
+
+	firestoreClient, err = app.Firestore(ctx)
+	if err != nil {
+		return fmt.Errorf("error initializing Firestore: %v", err)
+	}
+
+	return nil
+}
+
+// Emulator database for testing purposes
+func initFirestoreEmulator() error {
 	var app *firebase.App
 	var err error
 
 	ctx := context.Background()
 
-	// Check if running in a local environment with the Firestore emulator
 	if emulatorHost := os.Getenv("FIRESTORE_EMULATOR_HOST"); emulatorHost != "" {
 		// Connecting to Firestore emulator
 		fmt.Println("Connecting to Firestore emulator at", emulatorHost)
 		app, err = firebase.NewApp(ctx, &firebase.Config{
 			ProjectID: "overengineered-calculato-2f35d",
 		})
-	} else {
-		// Connect to the real Firestore service
-		fmt.Println("Connecting to Firestore service...")
-		opt := option.WithCredentialsFile("path/to/serviceAccountKey.json")
-		app, err = firebase.NewApp(ctx, nil, opt)
 	}
 
 	if err != nil {
@@ -53,7 +70,7 @@ func main() {
 	ctx := context.Background()
 
 	// Initialize Firestore
-	if err := initFirestore(); err != nil {
+	if err := initFirestoreEmulator(); err != nil {
 		log.Fatalf("Firestore initialization failed: %v", err)
 	}
 	defer firestoreClient.Close()
