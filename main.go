@@ -5,79 +5,24 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"overengineered_calculator/api"
 	"overengineered_calculator/calculator"
-
-	"cloud.google.com/go/firestore"
-	firebase "firebase.google.com/go/v4"
-	"google.golang.org/api/option"
+	"overengineered_calculator/setup"
 )
-
-var firestoreClient *firestore.Client
-
-// Initialize Firestore connection using service account key
-func initFirestoreProduction() error {
-
-	ctx := context.Background()
-
-	// Connect to the real Firestore service
-	fmt.Println("Connecting to Firestore service...")
-	opt := option.WithCredentialsFile("secrets/serviceAccountKey.json")
-	app, err := firebase.NewApp(ctx, nil, opt)
-
-	if err != nil {
-		return fmt.Errorf("error initializing app: %v", err)
-	}
-
-	firestoreClient, err = app.Firestore(ctx)
-	if err != nil {
-		return fmt.Errorf("error initializing Firestore: %v", err)
-	}
-
-	return nil
-}
-
-// Emulator database for testing purposes
-func initFirestoreEmulator() error {
-	var app *firebase.App
-	var err error
-
-	ctx := context.Background()
-
-	if emulatorHost := os.Getenv("FIRESTORE_EMULATOR_HOST"); emulatorHost != "" {
-		// Connecting to Firestore emulator
-		fmt.Println("Connecting to Firestore emulator at", emulatorHost)
-		app, err = firebase.NewApp(ctx, &firebase.Config{
-			ProjectID: "overengineered-calculato-2f35d",
-		})
-	}
-
-	if err != nil {
-		return fmt.Errorf("error initializing app: %v", err)
-	}
-
-	firestoreClient, err = app.Firestore(ctx)
-	if err != nil {
-		return fmt.Errorf("error initializing Firestore: %v", err)
-	}
-
-	return nil
-}
 
 func main() {
 
 	ctx := context.Background()
 
 	// Initialize Firestore
-	if err := initFirestoreProduction(); err != nil {
+	if err := setup.InitFirestoreEmulator(); err != nil {
 		log.Fatalf("Firestore initialization failed: %v", err)
 	}
-	defer firestoreClient.Close()
+	defer setup.FirestoreClient.Close()
 
 	// Init calculator instance with Firestore storage
 	firestoreStorage := &calculator.FirestoreStorage{
-		Client:  firestoreClient,
+		Client:  setup.FirestoreClient,
 		Context: ctx,
 	}
 	calc := calculator.Calculator{Storage: firestoreStorage}
@@ -88,11 +33,30 @@ func main() {
 	// Create HTTP request multiplexer
 	mux := http.NewServeMux()
 	api.RegisterRoutes(mux)
+	handlerWithCors := enableCORS(mux)
 
 	// Start HTTP server on port 8080 for manual testing
 	fmt.Println("Starting server on :8080...")
-	err := http.ListenAndServe(":8080", mux)
+	err := http.ListenAndServe(":8080", handlerWithCors)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// CORS on top of HTTP is needed to tell the client (browser)
+// what HTTP requests it is allowed to make. For simplicity, I allow all origins "*".
+// This is not secure for production use, instead it should be changed to the frontend URL.
+func enableCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		writer.Header().Set("Access-Control-Allow-Origin", "*")
+		writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		if request.Method == "OPTIONS" {
+			writer.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(writer, request)
+	})
 }

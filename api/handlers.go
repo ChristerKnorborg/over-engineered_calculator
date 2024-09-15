@@ -10,8 +10,8 @@ import (
 
 var calc = calculator.Calculator{}
 
-// Function to set the calculator instance to keep compatability with
-// Local Function calls and Storage for unit tests
+// Function to set the calculator instance to keep compatability
+// with Local Function calls and Local Storage for unit tests
 func SetCalculator(calculator calculator.Calculator) {
 	calc = calculator
 }
