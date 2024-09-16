@@ -86,6 +86,16 @@ func TestSubtractPositiveAndNegativeOperands(t *testing.T) {
 	}
 }
 
+func TestSubtractNegativeAndPositiveOperands(t *testing.T) {
+	calc := calculator.Calculator{
+		Storage: &calculator.LocalStorage{},
+	}
+	result := calc.Subtract(10000, -10000)
+	if result != 20000 {
+		t.Errorf("Expected 20000 but got %f", result)
+	}
+}
+
 func TestSubtractZero(t *testing.T) {
 	calc := calculator.Calculator{
 		Storage: &calculator.LocalStorage{},
@@ -382,6 +392,79 @@ func TestPowerZeroToZero(t *testing.T) {
 	result := calc.Power(0, 0)
 	if result != 1 {
 		t.Errorf("Expected 1 for 0^0 but got %f", result)
+	}
+}
+
+func TestLocalStorageSave(t *testing.T) {
+	storage := &calculator.LocalStorage{}
+	entry := calculator.HistoryEntry{
+		Operand1:  5,
+		Operand2:  3,
+		Operation: "Add",
+		Result:    8,
+	}
+
+	err := storage.Save(entry)
+	if err != nil {
+		t.Errorf("Expected nil but got %s", err)
+	}
+
+	if len(storage.History) != 1 {
+		t.Errorf("Expected 1 history entry but got %d", len(storage.History))
+	}
+
+	if storage.History[0].Operand1 != 5 {
+		t.Errorf("Expected 5 but got %f", storage.History[0].Operand1)
+	}
+
+	if storage.History[0].Operand2 != 3 {
+		t.Errorf("Expected 3 but got %f", storage.History[0].Operand2)
+	}
+
+	if storage.History[0].Operation != "Add" {
+		t.Errorf("Expected Add but got %s", storage.History[0].Operation)
+	}
+
+	if storage.History[0].Result != 8 {
+		t.Errorf("Expected 8 but got %f", storage.History[0].Result)
+	}
+
+}
+
+func TestLocalStorageGetHistory(t *testing.T) {
+	storage := &calculator.LocalStorage{}
+	entry := calculator.HistoryEntry{
+		Operand1:  5,
+		Operand2:  3,
+		Operation: "Add",
+		Result:    8,
+	}
+	storage.Save(entry)
+
+	history, err := storage.GetHistory()
+	if err != nil {
+		t.Errorf("Expected nil but got %s", err)
+	}
+
+	if len(history) != 1 {
+		t.Errorf("Expected 1 history entry but got %d", len(history))
+	}
+
+	if history[0].Operand1 != 5 {
+		t.Errorf("Expected 5 but got %f", history[0].Operand1)
+	}
+
+	if history[0].Operand2 != 3 {
+
+		t.Errorf("Expected 3 but got %f", history[0].Operand2)
+	}
+
+	if history[0].Operation != "Add" {
+		t.Errorf("Expected Add but got %s", history[0].Operation)
+	}
+
+	if history[0].Result != 8 {
+		t.Errorf("Expected 8 but got %f", history[0].Result)
 	}
 }
 
