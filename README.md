@@ -17,10 +17,12 @@ All of the endpoints are `\GET` methods, and are as follows:
 | `\history`  |                         |  
 
 
-| First Header  | Second Header |
+| Endpoint  | Parameters        |
 | ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
+| `\add`  | `\operand1`, `\operand2`  |
+| `\add`  | `\operand1`, `\operand2`  |
+| `\add`  | `\operand1`, `\operand2`  |
+| `\divide`  | `\operand1`, `\operand2`  |
 
 My solution to the problem contains the following (implemented) files:
 
