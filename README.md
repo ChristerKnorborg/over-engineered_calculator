@@ -24,12 +24,12 @@ My solution to the problem contains the following (implemented) files:
 calculator/  
 │  
 ├── operations/  
-│ &nbsp ├── calculator.go              # Core calculator operations (add, subtract, etc.)  
-│ &nbsp ├── storage.go                 # Storage logic for saving and retrieving history  
-│   └── calculator_test.go           # Unit tests for calculator operations and history  
+│   ├── calculator.go              # Core calculator operations (add, subtract, etc.)  
+│   ├── storage.go                 # Storage logic for saving and retrieving history  
+│   └── calculator_test.go         # Unit tests for calculator operations and history  
 │  
 ├── api/  
-│   ├── handlers.go                # HTTP handlers for API requests   
+│   ├── handlers.go                # HTTP handlers for API requests  
 │   ├── routes.go                  # API routing  
 │   └── api_test.go                # Unit tests for API handlers and routes  
 │  
@@ -38,7 +38,7 @@ calculator/
 ├── setup/  
 │   ├── setup.go                   # Firestore initialization (also includes an emulator for local testing)  
 │  
-├── web/                             
+├── web/  
 │   ├── styles.css                 # Styling for frontend calculator  
 │   ├── index.html                 # Simple webpage that interacts with the calculator API  
 │   └── script.js                  # JavaScript for making HTTP requests to the API  
