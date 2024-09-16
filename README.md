@@ -21,7 +21,7 @@ All of the endpoints are `\GET` methods, and are as follows:
 My solution to the problem contains the following (implemented) files:
 
 
-calculator/  
+over-engineered_calculator/  
 │  
 ├── operations/  
 │   ├── calculator.go              # Core calculator operations (add, subtract, etc.)  
