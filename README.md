@@ -8,15 +8,15 @@ The project also contains a small webpage that communicates with the backend via
 All of the endpoints are `\GET` methods, and are as follows:
 
 
-| Endpoint  | Parameters        | Description        |
-| ------------- | ------------- |
-| `\add`        | `operand1`, `operand2`  | Adds two numbers  |
-| `\subtract`   | `operand1`, `operand2`  | Subtracts the operand from the first. |
-| `\multiply`   | `operand1`, `operand2`  | Multiplies two numbers |
-| `\divide`     | `operand1`, `operand2`  | Divides the first operand by the second |
-| `\modulo`     | `operand1`, `operand2`  | Returns remainder of division |
-| `\power`     | `operand1`, `operand2`  | Raises the first operand to the power of the second |
-| `\history`     |  Gets the history of all operations performed |
+| Endpoint      | Parameters             | Description                                   |
+| ------------- | ---------------------- | --------------------------------------------- |
+| `\add`        | `operand1`, `operand2` | Adds two numbers                              |
+| `\subtract`   | `operand1`, `operand2` | Subtracts the second operand from the first   |
+| `\multiply`   | `operand1`, `operand2` | Multiplies two numbers                        |
+| `\divide`     | `operand1`, `operand2` | Divides the first operand by the second       |
+| `\modulo`     | `operand1`, `operand2` | Returns the remainder of division             |
+| `\power`      | `operand1`, `operand2` | Raises the first operand to the power of the second |
+| `\history`    |                        | Gets the history of all operations performed  |
 
 My solution to the problem contains the following (implemented) files:
 
