@@ -19,10 +19,12 @@ All of the endpoints are `\GET` methods, and are as follows:
 
 | Endpoint  | Parameters        |
 | ------------- | ------------- |
-| `\add`  | `\operand1`, `\operand2`  |
-| `\add`  | `\operand1`, `\operand2`  |
-| `\add`  | `\operand1`, `\operand2`  |
-| `\divide`  | `\operand1`, `\operand2`  |
+| `\add`        | `\operand1`, `\operand2`  |
+| `\subtract`   | `\operand1`, `\operand2`  |
+| `\multiply`   | `\operand1`, `\operand2`  |
+| `\divide`     | `\operand1`, `\operand2`  |
+| `\modulo`     | `\operand1`, `\operand2`  |
+| `\history`     | none  |
 
 My solution to the problem contains the following (implemented) files:
 
