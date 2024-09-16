@@ -23,8 +23,8 @@ My solution to the problem contains the following (implemented) files:
 calculator/  
 │  
 ├── operations/  
-│&nbsp├── calculator.go              # Core calculator operations (add, subtract, etc.)  
-│&nbsp├── storage.go                 # Storage logic for saving and retrieving history  
+│ &nbsp ├── calculator.go              # Core calculator operations (add, subtract, etc.)  
+│ &nbsp ├── storage.go                 # Storage logic for saving and retrieving history  
 │   └── calculator_test.go           # Unit tests for calculator operations and history  
 │  
 ├── api/  
