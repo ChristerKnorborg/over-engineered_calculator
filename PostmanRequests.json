@@ -12,12 +12,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/add?operand1=15&operand2=3",
-					"protocol": "http",
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/add?operand1=15&operand2=3",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
 					],
-					"port": "8080",
 					"path": [
 						"add"
 					],
@@ -36,17 +38,50 @@
 			"response": []
 		},
 		{
+			"name": "Add with decimals",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/add?operand1=15.1&operand2=3.9",
+					"protocol": "https",
+					"host": [
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
+					],
+					"path": [
+						"add"
+					],
+					"query": [
+						{
+							"key": "operand1",
+							"value": "15.1"
+						},
+						{
+							"key": "operand2",
+							"value": "3.9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Subtract",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/subtract?operand1=100&operand2=30",
-					"protocol": "http",
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/subtract?operand1=100&operand2=30",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
 					],
-					"port": "8080",
 					"path": [
 						"subtract"
 					],
@@ -65,17 +100,50 @@
 			"response": []
 		},
 		{
+			"name": "Subtract with decimals",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/subtract?operand1=15.1&operand2=3.9",
+					"protocol": "https",
+					"host": [
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
+					],
+					"path": [
+						"subtract"
+					],
+					"query": [
+						{
+							"key": "operand1",
+							"value": "15.1"
+						},
+						{
+							"key": "operand2",
+							"value": "3.9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Multiply",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/multiply?operand1=100&operand2=100",
-					"protocol": "http",
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/multiply?operand1=100&operand2=100",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
 					],
-					"port": "8080",
 					"path": [
 						"multiply"
 					],
@@ -94,17 +162,50 @@
 			"response": []
 		},
 		{
+			"name": "Multiply with decimals",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/multiply?operand1=0.4&operand2=10.5",
+					"protocol": "https",
+					"host": [
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
+					],
+					"path": [
+						"multiply"
+					],
+					"query": [
+						{
+							"key": "operand1",
+							"value": "0.4"
+						},
+						{
+							"key": "operand2",
+							"value": "10.5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Divide",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/divide?operand1=150&operand2=15",
-					"protocol": "http",
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/divide?operand1=150&operand2=15",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
 					],
-					"port": "8080",
 					"path": [
 						"divide"
 					],
@@ -123,17 +224,50 @@
 			"response": []
 		},
 		{
+			"name": "Divide with decimals",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/divide?operand1=1020.34&operand2=0.4",
+					"protocol": "https",
+					"host": [
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
+					],
+					"path": [
+						"divide"
+					],
+					"query": [
+						{
+							"key": "operand1",
+							"value": "1020.34"
+						},
+						{
+							"key": "operand2",
+							"value": "0.4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Divide with Zero",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/divide?operand1=150&operand2=0",
-					"protocol": "http",
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/divide?operand1=150&operand2=0",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
 					],
-					"port": "8080",
 					"path": [
 						"divide"
 					],
@@ -157,23 +291,56 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/modulo?operand1=21&operand2=2",
-					"protocol": "http",
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/modulo?operand1=22&operand2=2",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
 					],
-					"port": "8080",
 					"path": [
 						"modulo"
 					],
 					"query": [
 						{
 							"key": "operand1",
-							"value": "21"
+							"value": "22"
 						},
 						{
 							"key": "operand2",
 							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modulo with decimals",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/modulo?operand1=22.4&operand2=2.2",
+					"protocol": "https",
+					"host": [
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
+					],
+					"path": [
+						"modulo"
+					],
+					"query": [
+						{
+							"key": "operand1",
+							"value": "22.4"
+						},
+						{
+							"key": "operand2",
+							"value": "2.2"
 						}
 					]
 				}
@@ -186,12 +353,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/modulo?operand1=21&operand2=0",
-					"protocol": "http",
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/modulo?operand1=21&operand2=0",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
 					],
-					"port": "8080",
 					"path": [
 						"modulo"
 					],
@@ -215,12 +384,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/power?operand1=10&operand2=4",
-					"protocol": "http",
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/power?operand1=10&operand2=4",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
 					],
-					"port": "8080",
 					"path": [
 						"power"
 					],
@@ -239,17 +410,50 @@
 			"response": []
 		},
 		{
+			"name": "Power with decimals",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/power?operand1=10&operand2=2.5",
+					"protocol": "https",
+					"host": [
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
+					],
+					"path": [
+						"power"
+					],
+					"query": [
+						{
+							"key": "operand1",
+							"value": "10"
+						},
+						{
+							"key": "operand2",
+							"value": "2.5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "History",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/history",
-					"protocol": "http",
+					"raw": "https://overengineered-calculator-360186502614.europe-west1.run.app/history",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"overengineered-calculator-360186502614",
+						"europe-west1",
+						"run",
+						"app"
 					],
-					"port": "8080",
 					"path": [
 						"history"
 					]

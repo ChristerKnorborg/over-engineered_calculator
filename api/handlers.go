@@ -1,3 +1,5 @@
+// The package api contains the handlers for the calculator API i.e. th
+
 package api
 
 import (
@@ -10,14 +12,15 @@ import (
 
 var calc = calculator.Calculator{}
 
+type calculatorOperation func(a, b float64) float64
+type calculatorOperationWithError func(a, b float64) (float64, error)
+
 // Function to set the calculator instance to keep compatability
-// with Local Function calls and Local Storage for unit tests
+// with both Local Function calls and Local Storage for unit tests
+// and Firestore for production
 func SetCalculator(calculator calculator.Calculator) {
 	calc = calculator
 }
-
-type calculatorOperation func(a, b float64) float64
-type calculatorOperationWithError func(a, b float64) (float64, error)
 
 // Helper function to parse operands from the request as float64
 func parseOperands(request *http.Request) (float64, float64, error) {
@@ -30,7 +33,7 @@ func parseOperands(request *http.Request) (float64, float64, error) {
 	return operand1, operand2, nil
 }
 
-// Helper function to write JSON response for a result map
+// Helper function to write JSON response with the result
 func writeResultJSON(writer http.ResponseWriter, result float64) {
 	writer.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(writer).Encode(map[string]float64{"result": result})

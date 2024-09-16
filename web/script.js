@@ -44,7 +44,7 @@ const endpointOperatorMap = {
 
 
 
-// Handle button click logic
+// Handle button click logic based on current display and the button clicked.
 function handleButtonClick(value) {
 
     var isNumberOrDecimal = !isNaN(value) || value === '.';
@@ -75,7 +75,7 @@ function handleButtonClick(value) {
 
 
 
-// Update operands based on the current operator
+// Update either the first or second operand based on if the operator has been selected.
 function updateOperands(value) {
     if (operator === null) {
         firstOperand += value;
@@ -110,9 +110,10 @@ function updateDisplay(value) {
 
 
 
-// Perform the calculation by making an API request
+// Perform the calculation by making an API request to the google cloud backend server.
 function performCalculation() {
-    if (!firstOperand || !operator || !secondOperand) return;
+    var readyForCalculation = firstOperand && operator && secondOperand;
+    if (readyForCalculation) return;
 
     const operand1 = parseFloat(firstOperand);
     const operand2 = parseFloat(secondOperand);
@@ -120,8 +121,9 @@ function performCalculation() {
 
     if (!operation) return;
 
-    //const apiUrl = `https://overengineered-calculato-2f35d.web.app/${operation}?operand1=${operand1}&operand2=${operand2}`;
-    const apiUrl = `http://localhost:8080/${operation}?operand1=${operand1}&operand2=${operand2}`;
+    const apiUrl = `https://overengineered-calculator-360186502614.europe-west1.run.app/${operation}?operand1=${operand1}&operand2=${operand2}`;
+    //const apiUrl = `http://localhost:8080/${operation}?operand1=${operand1}&operand2=${operand2}`; // Local testing
+
     // Make API request and update display
     fetchApiAndUpdate(apiUrl);
 }
@@ -181,8 +183,8 @@ function toggleHistoryVisibility() {
 // Method to fetch history from the API and update the history list
 function fetchAndDisplayHistory() {
     
-    //const apiUrl = 'https://overengineered-calculato-2f35d.web.app/history';
-    const apiUrl = 'http://localhost:8080/history';
+    const apiUrl = 'https://overengineered-calculator-360186502614.europe-west1.run.app/history';
+    //const apiUrl = 'http://localhost:8080/history'; // Local testing
 
     fetch(apiUrl)
         .then(response => response.json())

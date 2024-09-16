@@ -1,36 +1,35 @@
+# Use lightweight image
 FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
 
-# Download dependencies
 RUN go mod download
 
-# Copy rest of application code
+# Copy application code
 COPY . .
 
 # Clean up
 RUN go mod tidy
 
-# Build the Go app
+# Build Go app
 RUN go build -o main .
-
 
 # Start a new stage from scratch
 FROM alpine:latest
 
-# Copy the pre-built binary from the builder stage
+# Copy pre-built binary from the builder stage
 COPY --from=builder /app/main /app/main
 
-# Copy the serviceAccountKey.json to the container
+
+# The secret serviceAccountKey.json is NOT copied to the container earlier
+# Run ls -l /app/secrets confirms that the file is copied
 COPY secrets/serviceAccountKey.json /app/secrets/serviceAccountKey.json
 RUN ls -l /app/secrets
 
-# default port for Cloud Run
 EXPOSE 8080
 
-# Command to run the executable
 ENTRYPOINT ["/app/main"]
 
 
