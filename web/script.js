@@ -120,8 +120,8 @@ function performCalculation() {
 
     if (!operation) return;
 
-    const apiUrl = `https://overengineered-calculato-2f35d.web.app/${operation}?operand1=${operand1}&operand2=${operand2}`;
-
+    //const apiUrl = `https://overengineered-calculato-2f35d.web.app/${operation}?operand1=${operand1}&operand2=${operand2}`;
+    const apiUrl = `http://localhost:8080/${operation}?operand1=${operand1}&operand2=${operand2}`;
     // Make API request and update display
     fetchApiAndUpdate(apiUrl);
 }
@@ -180,7 +180,9 @@ function toggleHistoryVisibility() {
 
 // Method to fetch history from the API and update the history list
 function fetchAndDisplayHistory() {
-    const apiUrl = 'https://overengineered-calculato-2f35d.web.app/history';
+    
+    //const apiUrl = 'https://overengineered-calculato-2f35d.web.app/history';
+    const apiUrl = 'http://localhost:8080/history';
 
     fetch(apiUrl)
         .then(response => response.json())

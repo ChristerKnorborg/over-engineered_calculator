@@ -1,4 +1,4 @@
-FROM golang:1.23
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
@@ -16,8 +16,19 @@ RUN go mod tidy
 # Build the Go app
 RUN go build -o main .
 
+
+# Start a new stage from scratch
+FROM alpine:latest
+
+# Copy the pre-built binary from the builder stage
+COPY --from=builder /app/main /app/main
+
 # default port for Cloud Run
 EXPOSE 8080
 
 # Command to run the executable
 ENTRYPOINT ["/app/main"]
+
+
+
+

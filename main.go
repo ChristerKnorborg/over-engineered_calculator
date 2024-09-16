@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"overengineered_calculator/api"
@@ -14,7 +15,8 @@ func main() {
 	ctx := context.Background()
 
 	// Initialize Firestore
-	if err := setup.InitFirestoreProduction(); err != nil {
+	err := setup.InitFirestoreEmulator()
+	if err != nil {
 		log.Fatalf("Firestore initialization failed: %v", err)
 	}
 	defer setup.FirestoreClient.Close()
@@ -32,30 +34,12 @@ func main() {
 	// Create HTTP request multiplexer
 	mux := http.NewServeMux()
 	api.RegisterRoutes(mux)
-	handlerWithCors := enableCORS(mux)
+	handlerWithCors := setup.EnableCORS(mux)
 
 	// Start HTTP server on port 8080 for manual testing
-	//fmt.Println("Starting server on :8080...")
-	err := http.ListenAndServe(":8080", handlerWithCors)
+	fmt.Println("Starting server on :8080...")
+	err = http.ListenAndServe(":8080", handlerWithCors)
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-// CORS on top of HTTP is needed to tell the client (browser)
-// what HTTP requests it is allowed to make. For simplicity, I allow all origins "*".
-// This is not secure for production use, instead it should be changed to the frontend URL.
-func enableCORS(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		writer.Header().Set("Access-Control-Allow-Origin", "*")
-		writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
-		if request.Method == "OPTIONS" {
-			writer.WriteHeader(http.StatusOK)
-			return
-		}
-
-		next.ServeHTTP(writer, request)
-	})
 }
