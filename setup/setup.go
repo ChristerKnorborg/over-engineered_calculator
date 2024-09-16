@@ -14,14 +14,16 @@ import (
 var FirestoreClient *firestore.Client
 
 // Initialize Firestore connection using service account key
-func InitFirestoreProduction() error {
+func InitFirestore() error {
 
 	ctx := context.Background()
 
 	// Connect to the real Firestore service
 	fmt.Println("Connecting to Firestore service...")
-	opt := option.WithCredentialsFile("secrets/serviceAccountKey.json")
-	app, err := firebase.NewApp(ctx, nil, opt)
+	opt := option.WithCredentialsFile("/app/secrets/serviceAccountKey.json")
+	app, err := firebase.NewApp(ctx, &firebase.Config{
+		ProjectID: "overengineered-calculato-2f35d",
+	}, opt)
 
 	if err != nil {
 		return fmt.Errorf("error initializing app: %v", err)
