@@ -3,7 +3,7 @@
 
 This project implements a RESTful calculator API in Go. It uses Firestore as the backend storage, deployed on Google Cloud Run. 
 The calculator supports the operations: addition, subtraction, multiplication, division, modulo, and exponentiation. Furthermore, it has a history feature that stores calculations on the database.
-The project also contains a small webpage that communicates with the backend via JavaScript to perform the calculations. The frontend is deployed on Firebase Hosting. 
+The project also contains a small webpage that communicates with the backend via JavaScript to perform the calculations. The frontend is deployed on Firebase Hosting. The webpage can be seen here: https://overengineered-calculato-2f35d.web.app/ 
 
 All of the endpoints are `\GET` methods, and are as follows:
 
@@ -43,4 +43,9 @@ calculator/
 │   ├── index.html                 # Simple webpage that interacts with the calculator API  
 │   └── script.js                  # JavaScript for making HTTP requests to the API  
 │  
-├── PostmanRequests.json           # Postman requests for API testing  
+├── PostmanRequests.json           # Postman requests for easy API testing  
+
+
+
+
+
