@@ -23,9 +23,9 @@ My solution to the problem contains the following (implemented) files:
 calculator/  
 │  
 ├── operations/  
-│   ├── calculator.go              # Core calculator operations (add, subtract, etc.)  
-│   ├── storage.go                 # Storage logic for saving and retrieving history  
-│   └── calculator_test.go         # Unit tests for calculator operations and history  
+│&nbsp├── calculator.go              # Core calculator operations (add, subtract, etc.)  
+│&nbsp├── storage.go                 # Storage logic for saving and retrieving history  
+│   └── calculator_test.go           # Unit tests for calculator operations and history  
 │  
 ├── api/  
 │   ├── handlers.go                # HTTP handlers for API requests   
