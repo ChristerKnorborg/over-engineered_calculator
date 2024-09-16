@@ -17,6 +17,11 @@ All of the endpoints are `\GET` methods, and are as follows:
 | `\history`  |                         |  
 
 
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
 My solution to the problem contains the following (implemented) files:
 
 
