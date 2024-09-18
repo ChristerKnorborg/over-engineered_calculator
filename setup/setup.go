@@ -11,10 +11,8 @@ import (
 	"google.golang.org/api/option"
 )
 
-var FirestoreClient *firestore.Client
-
 // Initialize Firestore connection using service account key
-func InitFirestore() error {
+func InitFirestore() (*firestore.Client, error) {
 
 	ctx := context.Background()
 
@@ -26,19 +24,19 @@ func InitFirestore() error {
 	}, opt)
 
 	if err != nil {
-		return fmt.Errorf("error initializing app: %v", err)
+		return nil, fmt.Errorf("error initializing app: %v", err)
 	}
 
-	FirestoreClient, err = app.Firestore(ctx)
+	firestoreClient, err := app.Firestore(ctx)
 	if err != nil {
-		return fmt.Errorf("error initializing Firestore: %v", err)
+		return nil, fmt.Errorf("error initializing Firestore: %v", err)
 	}
 
-	return nil
+	return firestoreClient, nil
 }
 
 // Emulator database for testing purposes
-func InitFirestoreEmulator() error {
+func InitFirestoreEmulator() (*firestore.Client, error) {
 	var app *firebase.App
 	var err error
 
@@ -53,16 +51,16 @@ func InitFirestoreEmulator() error {
 	}
 
 	if err != nil {
-		return fmt.Errorf("error initializing app: %v", err)
+		return nil, fmt.Errorf("error initializing app: %v", err)
 	}
 
 	// Initialize Firestore emulator
-	FirestoreClient, err = app.Firestore(ctx)
+	firestoreClient, err := app.Firestore(ctx)
 	if err != nil {
-		return fmt.Errorf("error initializing Firestore: %v", err)
+		return firestoreClient, fmt.Errorf("error initializing Firestore: %v", err)
 	}
 
-	return nil
+	return firestoreClient, nil
 }
 
 // CORS on top of HTTP is needed to tell the client (browser)

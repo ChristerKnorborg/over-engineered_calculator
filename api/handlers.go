@@ -10,17 +10,18 @@ import (
 	"strconv"
 )
 
-var calc = &calculator.Calculator{}
+type API struct {
+	calculator *calculator.Calculator
+}
+
+func NewAPI(calculator *calculator.Calculator) *API {
+	return &API{
+		calculator: calculator,
+	}
+}
 
 type calculatorOperation func(a, b float64) float64
 type calculatorOperationWithError func(a, b float64) (float64, error)
-
-// Function to set the calculator instance to keep compatability
-// with both Local Function calls and Local Storage for unit tests
-// and Firestore for production
-func SetCalculatorForAPI(calculator *calculator.Calculator) {
-	calc = calculator
-}
 
 // Helper function to parse operands from the request as float64
 func parseOperands(request *http.Request) (float64, float64, error) {
@@ -40,7 +41,7 @@ func writeResultJSON(writer http.ResponseWriter, result float64) {
 }
 
 // Generic handler for operations that return no error (Add, Subtract, Multiply, Power)
-func operationHandler(writer http.ResponseWriter, request *http.Request, operation calculatorOperation) {
+func (api *API) operationHandler(writer http.ResponseWriter, request *http.Request, operation calculatorOperation) {
 	operand1, operand2, err := parseOperands(request)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
@@ -52,7 +53,7 @@ func operationHandler(writer http.ResponseWriter, request *http.Request, operati
 }
 
 // Generic handler for operations that return an error (divide, modulo)
-func operationHandlerWithError(writer http.ResponseWriter, request *http.Request, operation calculatorOperationWithError) {
+func (api *API) operationHandlerWithError(writer http.ResponseWriter, request *http.Request, operation calculatorOperationWithError) {
 	operand1, operand2, err := parseOperands(request)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
@@ -69,38 +70,38 @@ func operationHandlerWithError(writer http.ResponseWriter, request *http.Request
 }
 
 // Handler for Add operation
-func addHandler(writer http.ResponseWriter, request *http.Request) {
-	operationHandler(writer, request, calc.Add)
+func (api *API) addHandler(writer http.ResponseWriter, request *http.Request) {
+	api.operationHandler(writer, request, api.calculator.Add)
 }
 
 // Handler for Subtract operation
-func subtractHandler(writer http.ResponseWriter, request *http.Request) {
-	operationHandler(writer, request, calc.Subtract)
+func (api *API) subtractHandler(writer http.ResponseWriter, request *http.Request) {
+	api.operationHandler(writer, request, api.calculator.Subtract)
 }
 
 // Handler for Multiply operation
-func multiplyHandler(writer http.ResponseWriter, request *http.Request) {
-	operationHandler(writer, request, calc.Multiply)
+func (api *API) multiplyHandler(writer http.ResponseWriter, request *http.Request) {
+	api.operationHandler(writer, request, api.calculator.Multiply)
 }
 
 // Handler for Divide operation
-func divideHandler(writer http.ResponseWriter, request *http.Request) {
-	operationHandlerWithError(writer, request, calc.Divide)
+func (api *API) divideHandler(writer http.ResponseWriter, request *http.Request) {
+	api.operationHandlerWithError(writer, request, api.calculator.Divide)
 }
 
 // Handler for Modulo operation
-func moduloHandler(writer http.ResponseWriter, request *http.Request) {
-	operationHandlerWithError(writer, request, calc.Modulo)
+func (api *API) moduloHandler(writer http.ResponseWriter, request *http.Request) {
+	api.operationHandlerWithError(writer, request, api.calculator.Modulo)
 }
 
 // Handler for Power operation
-func powerHandler(writer http.ResponseWriter, request *http.Request) {
-	operationHandler(writer, request, calc.Power)
+func (api *API) powerHandler(writer http.ResponseWriter, request *http.Request) {
+	api.operationHandler(writer, request, api.calculator.Power)
 }
 
 // Handler for retrieving history
-func historyHandler(writer http.ResponseWriter, request *http.Request) {
-	history, err := calc.GetHistory()
+func (api *API) historyHandler(writer http.ResponseWriter, request *http.Request) {
+	history, err := api.calculator.GetHistory()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return

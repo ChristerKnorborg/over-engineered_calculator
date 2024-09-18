@@ -15,26 +15,21 @@ func main() {
 	ctx := context.Background()
 
 	// Initialize Firestore
-	err := setup.InitFirestore()
+	firestoreClient, err := setup.InitFirestore()
 	if err != nil {
 		log.Fatalf("Firestore initialization failed: %v", err)
 	}
-	defer setup.FirestoreClient.Close()
+	defer firestoreClient.Close()
 
-	// Init calculator instance with Firestore storage
-	firestoreStorage := &calculator.FirestoreStorage{
-		Client:  setup.FirestoreClient,
-		Context: ctx,
-	}
-	calc := calculator.Calculator{Storage: firestoreStorage}
-
-	// Set the calculator instance in the API package
-	api.SetCalculator(calc)
+	// Initialize Calculator with Firestore storage for API
+	firestoreStorage := calculator.NewFirestoreStorage(firestoreClient, ctx)
+	calc := calculator.NewCalculator(firestoreStorage)
+	api := api.NewAPI(calc)
 
 	// Create HTTP request multiplexer
-	mux := http.NewServeMux()
-	api.RegisterRoutes(mux)
-	handlerWithCors := setup.EnableCORS(mux)
+	multiplexer := http.NewServeMux()
+	api.RegisterRoutes(multiplexer)
+	handlerWithCors := setup.EnableCORS(multiplexer)
 
 	fmt.Println("Starting server on :8080...")
 	err = http.ListenAndServe(":8080", handlerWithCors)

@@ -5,13 +5,13 @@ import (
 )
 
 // Set up routes for the calculator API
-func RegisterRoutes(mux *http.ServeMux) {
+func (api *API) RegisterRoutes(mux *http.ServeMux) {
 
-	mux.HandleFunc("/add", addHandler)
-	mux.HandleFunc("/subtract", subtractHandler)
-	mux.HandleFunc("/multiply", multiplyHandler)
-	mux.HandleFunc("/divide", divideHandler)
-	mux.HandleFunc("/modulo", moduloHandler)
-	mux.HandleFunc("/power", powerHandler)
-	mux.HandleFunc("/history", historyHandler)
+	mux.HandleFunc("/add", api.addHandler)
+	mux.HandleFunc("/subtract", api.subtractHandler)
+	mux.HandleFunc("/multiply", api.multiplyHandler)
+	mux.HandleFunc("/divide", api.divideHandler)
+	mux.HandleFunc("/modulo", api.moduloHandler)
+	mux.HandleFunc("/power", api.powerHandler)
+	mux.HandleFunc("/history", api.historyHandler)
 }

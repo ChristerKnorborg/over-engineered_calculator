@@ -112,8 +112,8 @@ function updateDisplay(value) {
 
 // Perform the calculation by making an API request to the google cloud backend server.
 function performCalculation() {
-    var readyForCalculation = firstOperand && operator && secondOperand;
-    if (readyForCalculation) return;
+    var notReadyForCalculation = !(firstOperand && operator && secondOperand);
+    if (notReadyForCalculation) return;
 
     const operand1 = parseFloat(firstOperand);
     const operand2 = parseFloat(secondOperand);
