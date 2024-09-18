@@ -1,9 +1,8 @@
-package api_test
+package api
 
 import (
 	"net/http"
 	"net/http/httptest"
-	"overengineered_calculator/api"
 	"overengineered_calculator/calculator"
 	"strings"
 	"testing"
@@ -11,10 +10,9 @@ import (
 
 // Function to set up LocalStorage for unit tests
 func testSetup() {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
-	api.SetCalculator(calc)
+	storage := calculator.NewLocalStorage()
+	calc := calculator.NewCalculator(storage)
+	SetCalculatorForAPI(calc)
 }
 
 // TestAddHandler checks the addition handler with the two operands:
@@ -25,7 +23,7 @@ func TestAddHandler(t *testing.T) {
 	request := httptest.NewRequest("GET", "/add?operand1=10&operand2=5", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.AddHandler(responseRecorder, request)
+	addHandler(responseRecorder, request)
 
 	// Check the status code
 	if responseRecorder.Code != http.StatusOK {
@@ -53,7 +51,7 @@ func TestAddHandlerWithInvalidOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/add?operand1=invalid&operand2=5", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.AddHandler(responseRecorder, request)
+	addHandler(responseRecorder, request)
 
 	// Check for bad status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -76,7 +74,7 @@ func TestAddHandlerWithMissingOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/add?operand1=10", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.AddHandler(responseRecorder, request)
+	addHandler(responseRecorder, request)
 
 	// Check for the bad request status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -99,7 +97,7 @@ func TestSubtractHandler(t *testing.T) {
 	request := httptest.NewRequest("GET", "/subtract?operand1=10&operand2=5", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.SubtractHandler(responseRecorder, request)
+	subtractHandler(responseRecorder, request)
 
 	// Check the status code
 	if responseRecorder.Code != http.StatusOK {
@@ -127,7 +125,7 @@ func TestSubtractHandlerWithInvalidOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/subtract?operand1=10&operand2=invalid", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.SubtractHandler(responseRecorder, request)
+	subtractHandler(responseRecorder, request)
 
 	// Check bad status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -150,7 +148,7 @@ func TestSubtractHandlerWithMissingOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/subtract?operand1=10", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.SubtractHandler(responseRecorder, request)
+	subtractHandler(responseRecorder, request)
 
 	// Check for the bad request status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -173,7 +171,7 @@ func TestMultiplyHandler(t *testing.T) {
 	request := httptest.NewRequest("GET", "/multiply?operand1=10&operand2=5", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.MultiplyHandler(responseRecorder, request)
+	multiplyHandler(responseRecorder, request)
 
 	// Check the status code
 	if responseRecorder.Code != http.StatusOK {
@@ -201,7 +199,7 @@ func TestMultiplyHandlerWithInvalidOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/multiply?operand1=invalid&operand2=45", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.MultiplyHandler(responseRecorder, request)
+	multiplyHandler(responseRecorder, request)
 
 	// Check bad status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -224,7 +222,7 @@ func TestMultiplyHandlerWithMissingOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/multiply?operand2=10", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.MultiplyHandler(responseRecorder, request)
+	multiplyHandler(responseRecorder, request)
 
 	// Check for the bad request status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -247,7 +245,7 @@ func TestDivideHandler(t *testing.T) {
 	request := httptest.NewRequest("GET", "/divide?operand1=10&operand2=5", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.DivideHandler(responseRecorder, request)
+	divideHandler(responseRecorder, request)
 
 	// Check the status code
 	if responseRecorder.Code != http.StatusOK {
@@ -275,7 +273,7 @@ func TestDivideHandlerWithInvalidOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/subtract?operand1=invalid&operand2=45", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.DivideHandler(responseRecorder, request)
+	divideHandler(responseRecorder, request)
 
 	// Check bad status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -298,7 +296,7 @@ func TestDivideHandlerWithMissingOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/divide?operand2=10", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.DivideHandler(responseRecorder, request)
+	divideHandler(responseRecorder, request)
 
 	// Check for the bad request status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -321,7 +319,7 @@ func TestDivideHandlerWithDivisionByZero(t *testing.T) {
 	request := httptest.NewRequest("GET", "/multiply?operand1=10&operand2=0", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.DivideHandler(responseRecorder, request)
+	divideHandler(responseRecorder, request)
 
 	// Check status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -344,7 +342,7 @@ func TestModuloHandler(t *testing.T) {
 	request := httptest.NewRequest("GET", "/modulo?operand1=11&operand2=5", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.ModuloHandler(responseRecorder, request)
+	moduloHandler(responseRecorder, request)
 
 	// Check the status code
 	if responseRecorder.Code != http.StatusOK {
@@ -372,7 +370,7 @@ func TestModuloHandlerWithInvalidOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/modulo?operand1=45&operand2=invalid", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.ModuloHandler(responseRecorder, request)
+	moduloHandler(responseRecorder, request)
 
 	// Check bad status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -395,7 +393,7 @@ func TestModuloHandlerWithMissingOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/modulo?operand1=45", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.ModuloHandler(responseRecorder, request)
+	moduloHandler(responseRecorder, request)
 
 	// Check for bad status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -418,7 +416,7 @@ func TestModuloHandlerWithModuloByZero(t *testing.T) {
 	request := httptest.NewRequest("GET", "/modulo?operand1=45&operand2=0", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.ModuloHandler(responseRecorder, request)
+	moduloHandler(responseRecorder, request)
 
 	// Check status code
 	if responseRecorder.Code != http.StatusBadRequest {
@@ -441,7 +439,7 @@ func TestPowerHandler(t *testing.T) {
 	request := httptest.NewRequest("GET", "/power?operand1=2&operand2=3", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.PowerHandler(responseRecorder, request)
+	powerHandler(responseRecorder, request)
 
 	// Check the status code
 	if responseRecorder.Code != http.StatusOK {
@@ -469,7 +467,7 @@ func TestPowerHandlerWithInvalidOperands(t *testing.T) {
 	request := httptest.NewRequest("GET", "/power?operand1=invalid&operand2=3", nil)
 	responseRecorder := httptest.NewRecorder()
 
-	api.PowerHandler(responseRecorder, request)
+	powerHandler(responseRecorder, request)
 
 	// Check for bad status code
 	if responseRecorder.Code != http.StatusBadRequest {

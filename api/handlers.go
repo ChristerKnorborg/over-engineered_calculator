@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-var calc = calculator.Calculator{}
+var calc = &calculator.Calculator{}
 
 type calculatorOperation func(a, b float64) float64
 type calculatorOperationWithError func(a, b float64) (float64, error)
@@ -18,7 +18,7 @@ type calculatorOperationWithError func(a, b float64) (float64, error)
 // Function to set the calculator instance to keep compatability
 // with both Local Function calls and Local Storage for unit tests
 // and Firestore for production
-func SetCalculator(calculator calculator.Calculator) {
+func SetCalculatorForAPI(calculator *calculator.Calculator) {
 	calc = calculator
 }
 
@@ -69,38 +69,38 @@ func operationHandlerWithError(writer http.ResponseWriter, request *http.Request
 }
 
 // Handler for Add operation
-func AddHandler(writer http.ResponseWriter, request *http.Request) {
+func addHandler(writer http.ResponseWriter, request *http.Request) {
 	operationHandler(writer, request, calc.Add)
 }
 
 // Handler for Subtract operation
-func SubtractHandler(writer http.ResponseWriter, request *http.Request) {
+func subtractHandler(writer http.ResponseWriter, request *http.Request) {
 	operationHandler(writer, request, calc.Subtract)
 }
 
 // Handler for Multiply operation
-func MultiplyHandler(writer http.ResponseWriter, request *http.Request) {
+func multiplyHandler(writer http.ResponseWriter, request *http.Request) {
 	operationHandler(writer, request, calc.Multiply)
 }
 
 // Handler for Divide operation
-func DivideHandler(writer http.ResponseWriter, request *http.Request) {
+func divideHandler(writer http.ResponseWriter, request *http.Request) {
 	operationHandlerWithError(writer, request, calc.Divide)
 }
 
 // Handler for Modulo operation
-func ModuloHandler(writer http.ResponseWriter, request *http.Request) {
+func moduloHandler(writer http.ResponseWriter, request *http.Request) {
 	operationHandlerWithError(writer, request, calc.Modulo)
 }
 
 // Handler for Power operation
-func PowerHandler(writer http.ResponseWriter, request *http.Request) {
+func powerHandler(writer http.ResponseWriter, request *http.Request) {
 	operationHandler(writer, request, calc.Power)
 }
 
 // Handler for retrieving history
-func HistoryHandler(writer http.ResponseWriter, request *http.Request) {
-	history, err := calc.Storage.GetHistory()
+func historyHandler(writer http.ResponseWriter, request *http.Request) {
+	history, err := calc.GetHistory()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
