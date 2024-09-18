@@ -19,49 +19,56 @@ type HistoryEntry struct {
 type Storage interface {
 	save(entry HistoryEntry) error
 	getHistory() ([]HistoryEntry, error)
+	reset() error
 }
 
 // Used to store history in memory for unit tests
 type LocalStorage struct {
-	History []HistoryEntry
+	history []HistoryEntry
 }
 
 // FirestoreStorage is used to store history in a Firestore database.
 type FirestoreStorage struct {
-	Client  *firestore.Client
-	Context context.Context
+	client  *firestore.Client
+	context context.Context
 }
 
 func NewLocalStorage() *LocalStorage {
 	return &LocalStorage{
-		History: []HistoryEntry{},
+		history: []HistoryEntry{},
 	}
 }
 
 func NewFirestoreStorage(client *firestore.Client, ctx context.Context) *FirestoreStorage {
 	return &FirestoreStorage{
-		Client:  client,
-		Context: ctx,
+		client:  client,
+		context: ctx,
 	}
 }
 
 // Save the history entry to the LocalStorage
 func (storage *LocalStorage) save(entry HistoryEntry) error {
-	storage.History = append(storage.History, entry)
+	storage.history = append(storage.history, entry)
 	return nil
 }
 
 // Get the history from the LocalStorage
 func (storage *LocalStorage) getHistory() ([]HistoryEntry, error) {
-	if len(storage.History) == 0 {
+	if len(storage.history) == 0 {
 		return nil, errors.New("no history found")
 	}
-	return storage.History, nil
+	return storage.history, nil
+}
+
+// Reset the history in the LocalStorage
+func (storage *LocalStorage) reset() error {
+	storage.history = []HistoryEntry{}
+	return nil
 }
 
 // Save the history entry to Firestore database
 func (storage *FirestoreStorage) save(entry HistoryEntry) error {
-	_, _, err := storage.Client.Collection("calculations").Add(storage.Context, map[string]interface{}{
+	_, _, err := storage.client.Collection("calculations").Add(storage.context, map[string]interface{}{
 		"operand1":  entry.Operand1,
 		"operand2":  entry.Operand2,
 		"operation": entry.Operation,
@@ -78,7 +85,7 @@ func (storage *FirestoreStorage) getHistory() ([]HistoryEntry, error) {
 	var history []HistoryEntry
 
 	// Query the Firestore database by "timestamp". Probably add pagination given a real application
-	iter := storage.Client.Collection("calculations").OrderBy("timestamp", firestore.Desc).Documents(storage.Context)
+	iter := storage.client.Collection("calculations").OrderBy("timestamp", firestore.Desc).Documents(storage.context)
 
 	for {
 		document, err := iter.Next()
@@ -95,4 +102,20 @@ func (storage *FirestoreStorage) getHistory() ([]HistoryEntry, error) {
 	}
 
 	return history, nil
+}
+
+// Reset the history in the Firestore database
+func (storage *FirestoreStorage) reset() error {
+	iter := storage.client.Collection("calculations").Documents(storage.context)
+	for {
+		doc, err := iter.Next()
+		if err != nil {
+			break
+		}
+		_, err = doc.Ref.Delete(storage.context)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

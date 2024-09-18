@@ -6,6 +6,7 @@ import (
 )
 
 func setupCalculatorWithLocalStorage() *Calculator {
+
 	storage := NewLocalStorage()
 	calculator := NewCalculator(storage)
 	return calculator
@@ -14,7 +15,6 @@ func setupCalculatorWithLocalStorage() *Calculator {
 func TestAddPositiveOperands(t *testing.T) {
 
 	calc := setupCalculatorWithLocalStorage()
-
 	result := calc.Add(10000, 10000)
 	if result != 20000 {
 		t.Errorf("Expected 20000 but got %f", result)
@@ -414,24 +414,24 @@ func TestLocalStorageSave(t *testing.T) {
 		t.Errorf("Expected nil but got %s", err)
 	}
 
-	if len(storage.History) != 1 {
-		t.Errorf("Expected 1 history entry but got %d", len(storage.History))
+	if len(storage.history) != 1 {
+		t.Errorf("Expected 1 history entry but got %d", len(storage.history))
 	}
 
-	if storage.History[0].Operand1 != 5 {
-		t.Errorf("Expected 5 but got %f", storage.History[0].Operand1)
+	if storage.history[0].Operand1 != 5 {
+		t.Errorf("Expected 5 but got %f", storage.history[0].Operand1)
 	}
 
-	if storage.History[0].Operand2 != 3 {
-		t.Errorf("Expected 3 but got %f", storage.History[0].Operand2)
+	if storage.history[0].Operand2 != 3 {
+		t.Errorf("Expected 3 but got %f", storage.history[0].Operand2)
 	}
 
-	if storage.History[0].Operation != "Add" {
-		t.Errorf("Expected Add but got %s", storage.History[0].Operation)
+	if storage.history[0].Operation != "Add" {
+		t.Errorf("Expected Add but got %s", storage.history[0].Operation)
 	}
 
-	if storage.History[0].Result != 8 {
-		t.Errorf("Expected 8 but got %f", storage.History[0].Result)
+	if storage.history[0].Result != 8 {
+		t.Errorf("Expected 8 but got %f", storage.history[0].Result)
 	}
 
 }

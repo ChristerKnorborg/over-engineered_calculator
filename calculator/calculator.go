@@ -21,77 +21,77 @@ func NewCalculator(storage Storage) *Calculator {
 }
 
 // Add takes two float64 operands, returns their sum, and saves the operation to history.
-func (calc *Calculator) Add(Operand1 float64, Operand2 float64) float64 {
+func (calc *Calculator) Add(operand1 float64, operand2 float64) float64 {
 
 	calc.mutex.Lock()
 	defer calc.mutex.Unlock()
 
-	result := Operand1 + Operand2
-	calc.saveToHistory("Add", Operand1, Operand2, result)
+	result := operand1 + operand2
+	calc.saveToHistory("Add", operand1, operand2, result)
 	return result
 }
 
 // Subtract takes two float64 operands, returns their difference, and saves the operation to history.
-func (calc *Calculator) Subtract(Operand1 float64, Operand2 float64) float64 {
+func (calc *Calculator) Subtract(operand1 float64, operand2 float64) float64 {
 
 	calc.mutex.Lock()
 	defer calc.mutex.Unlock()
 
-	result := Operand1 - Operand2
-	calc.saveToHistory("Subtract", Operand1, Operand2, result)
+	result := operand1 - operand2
+	calc.saveToHistory("Subtract", operand1, operand2, result)
 	return result
 }
 
 // Multiply takes two float64 operands, returns their product, and saves the operation to history.
-func (calc *Calculator) Multiply(Operand1 float64, Operand2 float64) float64 {
+func (calc *Calculator) Multiply(operand1 float64, operand2 float64) float64 {
 
 	calc.mutex.Lock()
 	defer calc.mutex.Unlock()
 
-	result := Operand1 * Operand2
-	calc.saveToHistory("Multiply", Operand1, Operand2, result)
+	result := operand1 * operand2
+	calc.saveToHistory("Multiply", operand1, operand2, result)
 	return result
 }
 
 // Divide takes two float64 operands, returns their quotient, and saves the operation to history.
 // If dividing by zero, the function returns an error.
-func (calc *Calculator) Divide(Operand1 float64, Operand2 float64) (float64, error) {
+func (calc *Calculator) Divide(operand1 float64, operand2 float64) (float64, error) {
 
 	calc.mutex.Lock()
 	defer calc.mutex.Unlock()
 
-	if Operand2 == 0 {
+	if operand2 == 0 {
 		return 0, errors.New("cannot divide by zero")
 	}
-	result := Operand1 / Operand2
-	calc.saveToHistory("Divide", Operand1, Operand2, result)
+	result := operand1 / operand2
+	calc.saveToHistory("Divide", operand1, operand2, result)
 
 	return result, nil
 }
 
 // Modulo takes two float64 operands, returns the remainder of the division, and saves the operation to history.
 // If modulo by zero, the function returns an error.
-func (calc *Calculator) Modulo(Operand1 float64, Operand2 float64) (float64, error) {
+func (calc *Calculator) Modulo(operand1 float64, operand2 float64) (float64, error) {
 
 	calc.mutex.Lock()
 	defer calc.mutex.Unlock()
 
-	if Operand2 == 0 {
+	if operand2 == 0 {
 		return 0, errors.New("cannot modulo by zero")
 	}
 
-	result := math.Mod(Operand1, Operand2) // Standard "%" operator does not work with floats
-	calc.saveToHistory("Modulo", Operand1, Operand2, result)
+	result := math.Mod(operand1, operand2) // Standard "%" operator does not work with floats
+	calc.saveToHistory("Modulo", operand1, operand2, result)
 
 	return result, nil
 }
-func (calc *Calculator) Power(Operand1 float64, Operand2 float64) float64 {
+func (calc *Calculator) Power(operand1 float64, operand2 float64) float64 {
 
 	calc.mutex.Lock()
 	defer calc.mutex.Unlock()
 
-	result := math.Pow(Operand1, Operand2)
-	calc.saveToHistory("Power", Operand1, Operand2, result)
+	result := math.Pow(operand1, operand2)
+	calc.saveToHistory("Power", operand1, operand2, result)
 	return result
 }
 
@@ -119,4 +119,13 @@ func (calc *Calculator) GetHistory() ([]HistoryEntry, error) {
 	defer calc.mutex.Unlock()
 
 	return calc.storage.getHistory()
+}
+
+// ResetHistory clears the history of calculations from the storage.
+func (calc *Calculator) ResetHistory() error {
+
+	calc.mutex.Lock()
+	defer calc.mutex.Unlock()
+
+	return calc.storage.reset()
 }

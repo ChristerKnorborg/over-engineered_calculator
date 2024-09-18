@@ -37,6 +37,7 @@ func parseOperands(request *http.Request) (float64, float64, error) {
 // Helper function to write JSON response with the result
 func writeResultJSON(writer http.ResponseWriter, result float64) {
 	writer.Header().Set("Content-Type", "application/json")
+
 	json.NewEncoder(writer).Encode(map[string]float64{"result": result})
 }
 
@@ -108,4 +109,10 @@ func (api *API) historyHandler(writer http.ResponseWriter, request *http.Request
 	}
 	writer.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(writer).Encode(history)
+}
+
+// Handler for resetting calculator history
+func (api *API) resetHandler(writer http.ResponseWriter, request *http.Request) {
+	api.calculator.ResetHistory()
+	writer.WriteHeader(http.StatusOK)
 }

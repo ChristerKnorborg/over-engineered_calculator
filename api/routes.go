@@ -14,4 +14,6 @@ func (api *API) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/modulo", api.moduloHandler)
 	mux.HandleFunc("/power", api.powerHandler)
 	mux.HandleFunc("/history", api.historyHandler)
+	mux.HandleFunc("/reset", api.resetHandler)
+
 }
