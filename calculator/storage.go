@@ -17,8 +17,8 @@ type HistoryEntry struct {
 }
 
 type Storage interface {
-	Save(entry HistoryEntry) error
-	GetHistory() ([]HistoryEntry, error)
+	save(entry HistoryEntry) error
+	getHistory() ([]HistoryEntry, error)
 }
 
 // Used to store history in memory for unit tests
@@ -32,14 +32,27 @@ type FirestoreStorage struct {
 	Context context.Context
 }
 
+func NewLocalStorage() *LocalStorage {
+	return &LocalStorage{
+		History: []HistoryEntry{},
+	}
+}
+
+func NewFirestoreStorage(client *firestore.Client, ctx context.Context) *FirestoreStorage {
+	return &FirestoreStorage{
+		Client:  client,
+		Context: ctx,
+	}
+}
+
 // Save the history entry to the LocalStorage
-func (storage *LocalStorage) Save(entry HistoryEntry) error {
+func (storage *LocalStorage) save(entry HistoryEntry) error {
 	storage.History = append(storage.History, entry)
 	return nil
 }
 
 // Get the history from the LocalStorage
-func (storage *LocalStorage) GetHistory() ([]HistoryEntry, error) {
+func (storage *LocalStorage) getHistory() ([]HistoryEntry, error) {
 	if len(storage.History) == 0 {
 		return nil, errors.New("no history found")
 	}
@@ -47,7 +60,7 @@ func (storage *LocalStorage) GetHistory() ([]HistoryEntry, error) {
 }
 
 // Save the history entry to Firestore database
-func (storage *FirestoreStorage) Save(entry HistoryEntry) error {
+func (storage *FirestoreStorage) save(entry HistoryEntry) error {
 	_, _, err := storage.Client.Collection("calculations").Add(storage.Context, map[string]interface{}{
 		"operand1":  entry.Operand1,
 		"operand2":  entry.Operand2,
@@ -60,7 +73,7 @@ func (storage *FirestoreStorage) Save(entry HistoryEntry) error {
 
 // The function GetHistory retrieves the history of calculations from the Firestore database sorted by newest operations
 // first. It returns a slice of HistoryEntry structs.
-func (storage *FirestoreStorage) GetHistory() ([]HistoryEntry, error) {
+func (storage *FirestoreStorage) getHistory() ([]HistoryEntry, error) {
 
 	var history []HistoryEntry
 

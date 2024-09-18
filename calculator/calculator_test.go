@@ -1,15 +1,20 @@
-package calculator_test
+package calculator
 
 import (
 	"math"
-	"overengineered_calculator/calculator"
 	"testing"
 )
 
+func setupCalculatorWithLocalStorage() *Calculator {
+	storage := NewLocalStorage()
+	calculator := NewCalculator(storage)
+	return calculator
+}
+
 func TestAddPositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Add(10000, 10000)
 	if result != 20000 {
 		t.Errorf("Expected 20000 but got %f", result)
@@ -17,9 +22,9 @@ func TestAddPositiveOperands(t *testing.T) {
 }
 
 func TestAddNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Add(-10000, -10000)
 	if result != -20000 {
 		t.Errorf("Expected -20000 but got %f", result)
@@ -27,9 +32,9 @@ func TestAddNegativeOperands(t *testing.T) {
 }
 
 func TestAddPositiveAndNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Add(-10000, 10000)
 	if result != 0 {
 		t.Errorf("Expected 0 but got %f", result)
@@ -37,9 +42,9 @@ func TestAddPositiveAndNegativeOperands(t *testing.T) {
 }
 
 func TestAddZero(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Add(10000, 0)
 	if result != 10000 {
 		t.Errorf("Expected 10000 but got %f", result)
@@ -47,9 +52,9 @@ func TestAddZero(t *testing.T) {
 }
 
 func TestAddToZero(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Add(0, 10000)
 	if result != 10000 {
 		t.Errorf("Expected 10000 but got %f", result)
@@ -57,9 +62,9 @@ func TestAddToZero(t *testing.T) {
 }
 
 func TestSubtractPositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Subtract(10000, 10000)
 	if result != 0 {
 		t.Errorf("Expected 0 but got %f", result)
@@ -67,9 +72,9 @@ func TestSubtractPositiveOperands(t *testing.T) {
 }
 
 func TestSubtractNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Subtract(-10000, -10000)
 	if result != 0 {
 		t.Errorf("Expected 0 but got %f", result)
@@ -77,9 +82,9 @@ func TestSubtractNegativeOperands(t *testing.T) {
 }
 
 func TestSubtractPositiveAndNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Subtract(-10000, 10000)
 	if result != -20000 {
 		t.Errorf("Expected -20000 but got %f", result)
@@ -87,9 +92,9 @@ func TestSubtractPositiveAndNegativeOperands(t *testing.T) {
 }
 
 func TestSubtractNegativeAndPositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Subtract(10000, -10000)
 	if result != 20000 {
 		t.Errorf("Expected 20000 but got %f", result)
@@ -97,9 +102,9 @@ func TestSubtractNegativeAndPositiveOperands(t *testing.T) {
 }
 
 func TestSubtractZero(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Subtract(10000, 0)
 	if result != 10000 {
 		t.Errorf("Expected 10000 but got %f", result)
@@ -107,9 +112,9 @@ func TestSubtractZero(t *testing.T) {
 }
 
 func TestSubtractFromZero(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Subtract(0, 10000)
 	if result != -10000 {
 		t.Errorf("Expected -10000 but got %f", result)
@@ -117,9 +122,9 @@ func TestSubtractFromZero(t *testing.T) {
 }
 
 func TestMultiplyPositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Multiply(10000, 10000)
 	if result != 100000000 {
 		t.Errorf("Expected 100000000 but got %f", result)
@@ -127,9 +132,9 @@ func TestMultiplyPositiveOperands(t *testing.T) {
 }
 
 func TestMultiplyNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Multiply(-10000, -10000)
 	if result != 100000000 {
 		t.Errorf("Expected 100000000 but got %f", result)
@@ -137,9 +142,9 @@ func TestMultiplyNegativeOperands(t *testing.T) {
 }
 
 func TestMultiplyPositiveAndNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Multiply(-10000, 10000)
 	if result != -100000000 {
 		t.Errorf("Expected -100000000 but got %f", result)
@@ -147,9 +152,9 @@ func TestMultiplyPositiveAndNegativeOperands(t *testing.T) {
 }
 
 func TestMultiplyNegativeAndPositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Multiply(10000, -10000)
 	if result != -100000000 {
 		t.Errorf("Expected -100000000 but got %f", result)
@@ -157,9 +162,9 @@ func TestMultiplyNegativeAndPositiveOperands(t *testing.T) {
 }
 
 func TestMultiplyWithZero(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Multiply(10000, 0)
 	if result != 0 {
 		t.Errorf("Expected 0 but got %f", result)
@@ -167,9 +172,9 @@ func TestMultiplyWithZero(t *testing.T) {
 }
 
 func TestMultiplyNegativeOperandWithZero(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Multiply(-10000, 0)
 	if result != 0 {
 		t.Errorf("Expected 0 but got %f", result)
@@ -177,9 +182,9 @@ func TestMultiplyNegativeOperandWithZero(t *testing.T) {
 }
 
 func TestDividePositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result, err := calc.Divide(10000, 10000)
 
 	if err != nil {
@@ -192,9 +197,9 @@ func TestDividePositiveOperands(t *testing.T) {
 }
 
 func TestDivideNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result, err := calc.Divide(-10000, -10000)
 
 	if err != nil {
@@ -207,9 +212,9 @@ func TestDivideNegativeOperands(t *testing.T) {
 }
 
 func TestDividePositiveAndNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result, err := calc.Divide(-10000, 10000)
 
 	if err != nil {
@@ -222,9 +227,9 @@ func TestDividePositiveAndNegativeOperands(t *testing.T) {
 }
 
 func TestDivideNegativeAndPositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result, err := calc.Divide(-10000, 10000)
 
 	if err != nil {
@@ -237,9 +242,9 @@ func TestDivideNegativeAndPositiveOperands(t *testing.T) {
 }
 
 func TestDivideByZero(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	_, err := calc.Divide(10000, 0)
 	if err == nil {
 		t.Error("Expected error but got nil")
@@ -247,9 +252,9 @@ func TestDivideByZero(t *testing.T) {
 }
 
 func TestModuloPositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result, err := calc.Modulo(87, 5)
 
 	if err != nil {
@@ -262,9 +267,9 @@ func TestModuloPositiveOperands(t *testing.T) {
 }
 
 func TestModuloNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result, err := calc.Modulo(-87, -5)
 
 	if err != nil {
@@ -277,9 +282,9 @@ func TestModuloNegativeOperands(t *testing.T) {
 }
 
 func TestModuloPositiveAndNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result, err := calc.Modulo(-87, 5)
 
 	if err != nil {
@@ -292,9 +297,9 @@ func TestModuloPositiveAndNegativeOperands(t *testing.T) {
 }
 
 func TestModuloNegativeAndPositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result, err := calc.Modulo(87, -5)
 
 	if err != nil {
@@ -307,9 +312,9 @@ func TestModuloNegativeAndPositiveOperands(t *testing.T) {
 }
 
 func TestModuloWithFloats(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result, err := calc.Modulo(87.3, 5.5)
 
 	if err != nil {
@@ -326,9 +331,9 @@ func TestModuloWithFloats(t *testing.T) {
 }
 
 func TestModuloByZero(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	_, err := calc.Modulo(10000, 0)
 	if err == nil {
 		t.Error("Expected error but got nil")
@@ -336,9 +341,9 @@ func TestModuloByZero(t *testing.T) {
 }
 
 func TestPowerPositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Power(5, 3)
 	if result != 125 {
 		t.Errorf("Expected 8 but got %f", result)
@@ -346,9 +351,9 @@ func TestPowerPositiveOperands(t *testing.T) {
 }
 
 func TestPowerNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Power(-5, -2) // -5^-2 = -1/25
 	if result != 0.04 {
 		t.Errorf("Expected 0.04 but got %f", result)
@@ -356,9 +361,9 @@ func TestPowerNegativeOperands(t *testing.T) {
 }
 
 func TestPowerPositiveAndNegativeOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Power(-5, 3)
 	if result != -125.0 {
 		t.Errorf("Expected -125 but got %f", result)
@@ -366,9 +371,9 @@ func TestPowerPositiveAndNegativeOperands(t *testing.T) {
 }
 
 func TestPowerNegativeAndPositiveOperands(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Power(5, -3) // 5^-3 = 1/125
 	if result != 0.008 {
 		t.Errorf("Expected 0.008 but got %f", result)
@@ -376,9 +381,9 @@ func TestPowerNegativeAndPositiveOperands(t *testing.T) {
 }
 
 func TestPowerWithZero(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Power(5, 0)
 	if result != 1 {
 		t.Errorf("Expected 1 but got %f", result)
@@ -386,9 +391,9 @@ func TestPowerWithZero(t *testing.T) {
 }
 
 func TestPowerZeroToZero(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	result := calc.Power(0, 0)
 	if result != 1 {
 		t.Errorf("Expected 1 for 0^0 but got %f", result)
@@ -396,15 +401,15 @@ func TestPowerZeroToZero(t *testing.T) {
 }
 
 func TestLocalStorageSave(t *testing.T) {
-	storage := &calculator.LocalStorage{}
-	entry := calculator.HistoryEntry{
+	storage := &LocalStorage{}
+	entry := HistoryEntry{
 		Operand1:  5,
 		Operand2:  3,
 		Operation: "Add",
 		Result:    8,
 	}
 
-	err := storage.Save(entry)
+	err := storage.save(entry)
 	if err != nil {
 		t.Errorf("Expected nil but got %s", err)
 	}
@@ -432,16 +437,16 @@ func TestLocalStorageSave(t *testing.T) {
 }
 
 func TestLocalStorageGetHistory(t *testing.T) {
-	storage := &calculator.LocalStorage{}
-	entry := calculator.HistoryEntry{
+	storage := &LocalStorage{}
+	entry := HistoryEntry{
 		Operand1:  5,
 		Operand2:  3,
 		Operation: "Add",
 		Result:    8,
 	}
-	storage.Save(entry)
+	storage.save(entry)
 
-	history, err := storage.GetHistory()
+	history, err := storage.getHistory()
 	if err != nil {
 		t.Errorf("Expected nil but got %s", err)
 	}
@@ -469,9 +474,9 @@ func TestLocalStorageGetHistory(t *testing.T) {
 }
 
 func TestCalculatorWithHistorySingleOperation(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	calc.Subtract(5, 3)
 
 	history, _ := calc.GetHistory()
@@ -489,9 +494,9 @@ func TestCalculatorWithHistorySingleOperation(t *testing.T) {
 }
 
 func TestCalculatorWithHistoryAllOperations(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	calc.Add(1, 2)
 	calc.Subtract(5, 3)
 	calc.Multiply(3, 4)
@@ -524,9 +529,9 @@ func TestCalculatorWithHistoryAllOperations(t *testing.T) {
 }
 
 func TestEmptyHistory(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
+
 	history, _ := calc.GetHistory()
 
 	if len(history) != 0 {
@@ -535,9 +540,8 @@ func TestEmptyHistory(t *testing.T) {
 }
 
 func TestLargeHistory(t *testing.T) {
-	calc := calculator.Calculator{
-		Storage: &calculator.LocalStorage{},
-	}
+
+	calc := setupCalculatorWithLocalStorage()
 
 	// Add 10000 entries to the history with Add operation
 	for i := 0; i < 10000; i++ {
