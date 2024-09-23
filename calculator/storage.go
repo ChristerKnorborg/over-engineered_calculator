@@ -16,7 +16,7 @@ type HistoryEntry struct {
 	Timestamp time.Time // When the operation was performed
 }
 
-type Storage interface {
+type storage interface {
 	save(entry HistoryEntry) error
 	getHistory() ([]HistoryEntry, error)
 	reset() error
@@ -29,8 +29,7 @@ type LocalStorage struct {
 
 // FirestoreStorage is used to store history in a Firestore database.
 type FirestoreStorage struct {
-	client  *firestore.Client
-	context context.Context
+	client *firestore.Client
 }
 
 func NewLocalStorage() *LocalStorage {
@@ -39,10 +38,9 @@ func NewLocalStorage() *LocalStorage {
 	}
 }
 
-func NewFirestoreStorage(client *firestore.Client, ctx context.Context) *FirestoreStorage {
+func NewFirestoreStorage(client *firestore.Client) *FirestoreStorage {
 	return &FirestoreStorage{
-		client:  client,
-		context: ctx,
+		client: client,
 	}
 }
 
@@ -68,7 +66,11 @@ func (storage *LocalStorage) reset() error {
 
 // Save the history entry to Firestore database
 func (storage *FirestoreStorage) save(entry HistoryEntry) error {
-	_, _, err := storage.client.Collection("calculations").Add(storage.context, map[string]interface{}{
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, _, err := storage.client.Collection("calculations").Add(ctx, map[string]interface{}{
 		"operand1":  entry.Operand1,
 		"operand2":  entry.Operand2,
 		"operation": entry.Operation,
@@ -84,8 +86,11 @@ func (storage *FirestoreStorage) getHistory() ([]HistoryEntry, error) {
 
 	var history []HistoryEntry
 
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	// Query the Firestore database by "timestamp". Probably add pagination given a real application
-	iter := storage.client.Collection("calculations").OrderBy("timestamp", firestore.Desc).Documents(storage.context)
+	iter := storage.client.Collection("calculations").OrderBy("timestamp", firestore.Desc).Documents(ctx)
 
 	for {
 		document, err := iter.Next()
@@ -106,13 +111,17 @@ func (storage *FirestoreStorage) getHistory() ([]HistoryEntry, error) {
 
 // Reset the history in the Firestore database
 func (storage *FirestoreStorage) reset() error {
-	iter := storage.client.Collection("calculations").Documents(storage.context)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	iter := storage.client.Collection("calculations").Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if err != nil {
 			break
 		}
-		_, err = doc.Ref.Delete(storage.context)
+		_, err = doc.Ref.Delete(ctx)
 		if err != nil {
 			return err
 		}

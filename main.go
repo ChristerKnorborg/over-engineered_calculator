@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,17 +11,15 @@ import (
 
 func main() {
 
-	ctx := context.Background()
-
 	// Initialize Firestore
-	firestoreClient, err := setup.InitFirestore()
+	firestoreClient, err := setup.InitFirestoreEmulator()
 	if err != nil {
 		log.Fatalf("Firestore initialization failed: %v", err)
 	}
 	defer firestoreClient.Close()
 
 	// Initialize Calculator with Firestore storage for API
-	firestoreStorage := calculator.NewFirestoreStorage(firestoreClient, ctx)
+	firestoreStorage := calculator.NewFirestoreStorage(firestoreClient)
 	calc := calculator.NewCalculator(firestoreStorage)
 	api := api.NewAPI(calc)
 

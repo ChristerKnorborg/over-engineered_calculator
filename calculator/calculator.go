@@ -10,11 +10,11 @@ import (
 )
 
 type Calculator struct {
-	storage Storage
+	storage storage
 	mutex   sync.Mutex
 }
 
-func NewCalculator(storage Storage) *Calculator {
+func NewCalculator(storage storage) *Calculator {
 	return &Calculator{
 		storage: storage,
 	}
