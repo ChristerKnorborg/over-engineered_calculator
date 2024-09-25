@@ -4,15 +4,16 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"overengineered_calculator/calculator"
+	"overengineered_calculator/storage"
 	"strings"
 	"testing"
 )
 
 // Function to set up LocalStorage for unit tests
 func testSetup() *API {
-	storage := calculator.NewLocalStorage()
-	calc := calculator.NewCalculator(storage)
-	api := NewAPI(calc)
+	storage := storage.NewLocalStorage()
+	calc := calculator.NewCalculator()
+	api := NewAPI(calc, storage)
 	return api
 }
 

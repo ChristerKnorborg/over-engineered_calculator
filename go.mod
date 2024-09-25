@@ -7,7 +7,10 @@ require (
 	google.golang.org/api v0.196.0
 )
 
-require google.golang.org/appengine v1.6.8 // indirect
+require (
+	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
+	google.golang.org/appengine v1.6.8 // indirect
+)
 
 require (
 	cloud.google.com/go v0.115.1 // indirect

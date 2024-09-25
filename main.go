@@ -7,6 +7,7 @@ import (
 	"overengineered_calculator/api"
 	"overengineered_calculator/calculator"
 	"overengineered_calculator/setup"
+	"overengineered_calculator/storage"
 )
 
 func main() {
@@ -19,9 +20,9 @@ func main() {
 	defer firestoreClient.Close()
 
 	// Initialize Calculator with Firestore storage for API
-	firestoreStorage := calculator.NewFirestoreStorage(firestoreClient)
-	calc := calculator.NewCalculator(firestoreStorage)
-	api := api.NewAPI(calc)
+	firestoreStorage := storage.NewFirestoreStorage(firestoreClient)
+	calc := calculator.NewCalculator()
+	api := api.NewAPI(calc, firestoreStorage)
 
 	// Create HTTP request multiplexer
 	multiplexer := http.NewServeMux()
